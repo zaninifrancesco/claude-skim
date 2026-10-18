@@ -18,11 +18,18 @@ Add Skim: local filtering of noisy Bash output
 
 Adds Skim, a Claude Code Function Hooks plugin for reducing repetitive Bash
 output with deterministic TypeScript parsers. It supports Jest/Vitest,
-Pytest/unittest, common package managers and compiler/linter output.
+Pytest/unittest, Cargo, common package managers and compiler/linter output.
 
 Unknown commands and ambiguous formats pass through unchanged. Modified
 results are returned only after the raw output is archived locally. The plugin
 also provides `/skim stats`, `/skim raw`, `/skim toggle` and a savings badge.
+
+Install inside Claude Code:
+
+```text
+/plugin install skim --marketplace zaninifrancesco/claude-skim
+/reload-plugins
+```
 
 Validation: Vitest suite, TypeScript typecheck/build and
 `claude plugin validate . --strict`. Installation and supported behavior are

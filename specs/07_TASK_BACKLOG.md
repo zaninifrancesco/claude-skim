@@ -75,11 +75,17 @@
   calls with zero errors and warnings. Calls to `$` stay in the hook module.
 - Task 6.3 is a local draft in `docs/awesome-claude-code-mods-submission.md`;
   no upstream PR or release has been published.
-- Go/Cargo adapters and automatic archive cleanup are outside this checklist.
+- The Go adapter and automatic archive cleanup are outside this checklist.
 
 
 ## Phase 7: Zero-Configuration User Experience
-- [ ] **Task 7.1**: Publishable marketplace manifest and one-command install documentation.
-- [ ] **Task 7.2**: Add Cargo test/build/check parsing with failure-preserving fixtures and tests.
-- [ ] **Task 7.3**: Match the savings badge and boxed report, and show the complete `/skim raw` log.
-- [ ] **Task 7.4**: Validate installation in an isolated user configuration and run host integration tests.
+- [x] **Task 7.1**: Publishable marketplace manifest and one-command install documentation.
+- [x] **Task 7.2**: Add Cargo test/build/check parsing with failure-preserving fixtures and tests.
+- [x] **Task 7.3**: Match the savings badge and boxed report, and show the complete `/skim raw` log.
+- [x] **Task 7.4**: Validate installation in an isolated user configuration and run host integration tests.
+
+- Phase 7 installation was checked with an isolated `CLAUDE_CONFIG_DIR` and a
+  clean source copy without `node_modules` or `dist`; the CLI persisted
+  `skim@claude-skim` as enabled at user scope. A native host smoke test checked
+  automatic Cargo pruning, raw archival, the boxed report, full `/skim raw`
+  output and pause behavior. Timing claims are targets rather than guarantees.

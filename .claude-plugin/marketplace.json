@@ -1,0 +1,16 @@
+{
+  "name": "claude-skim",
+  "owner": {
+    "name": "Francesco Zanini"
+  },
+  "plugins": [
+    {
+      "name": "skim",
+      "source": "./",
+      "description": "Skim the noise, keep the signal. Automatic, local filtering of noisy Bash output."
+    }
+  ],
+  "metadata": {
+    "description": "Official marketplace for Skim, automatic local filtering of noisy Claude Code Bash output."
+  }
+}

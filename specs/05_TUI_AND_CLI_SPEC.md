@@ -6,7 +6,7 @@ Rendered continuously above the Claude Code prompt input box. Updated on every `
 
 ### Status Bar Format:
 ```text
-⚡ Skim: -48.2k tokens (~$0.14) · 12 pruned
+⚡ Skim: -48.2k tokens (~$0.14) · 12 logs skimmed
 ```
 
 - When 0 tokens saved in the current session:
@@ -32,7 +32,7 @@ Prints a formatted summary card to the transcript:
 │  ⚡ Skim Savings Report                                      │
 ├─────────────────────────────────────────────────────────────┤
 │  Session Tokens Saved:    54,210 tokens (~$0.16)            │
-│  Session Logs Pruned:     14 command runs                   │
+│  Session Logs Skimmed:     14 command runs                   │
 │  Average Reduction:       78.4%                             │
 │                                                             │
 │  Breakdown by Adapter:                                      │
@@ -47,7 +47,7 @@ Prints a formatted summary card to the transcript:
 ```
 
 ### 2.2 `/skim raw`
-Displays the full path to the most recently pruned log file and prints its first 20 lines, allowing the developer to inspect uncompressed output without leaving the terminal.
+Displays the full path to the most recently pruned log file and prints its complete original contents, allowing the developer to inspect uncompressed output without leaving the terminal.
 
 ### 2.3 `/skim toggle`
 Toggles pruning ON or OFF:

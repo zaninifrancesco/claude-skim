@@ -11,23 +11,39 @@ local TypeScript heuristics. Every modified result links to an archived copy of
 the full raw output. No network requests, external models or API keys are used
 by the plugin.
 
-## Load the plugin
+## Install once
 
-Requires a Claude Code build supporting the Function Hooks API. The bundled
-API declarations are from Claude Code 2.1.274.
+Inside Claude Code, run:
 
-```bash
-git clone https://github.com/zaninifrancesco/claude-skim.git
-claude --plugin-dir ./claude-skim
+```text
+/plugin install skim --marketplace zaninifrancesco/claude-skim
+/reload-plugins
 ```
 
-This loads the plugin for that session. No npm installation or build is needed
-to load the TypeScript hooks. Use `/reload-plugins` after editing them.
+Skim is enabled automatically. Keep using Claude Code normally: no API keys,
+`.env` files, npm installation, build step or per-session flags are needed.
+The one-command marketplace installer requires Claude Code 2.1.275 or later
+with Function Hooks support.
+
+Alternatively, install persistently for your user from a terminal:
+
+```bash
+claude plugin marketplace add zaninifrancesco/claude-skim
+claude plugin install skim@claude-skim --scope user
+```
+
+Reload plugins in any already-open session after installing. Start future
+sessions with the usual `claude` command from any project.
+
+For local development only, `claude --plugin-dir /path/to/claude-skim` still
+loads the checked-out plugin for one session.
 
 ## Supported output
 
 - **Jest / Vitest:** compact passing summaries; preserve failing test names,
   assertion diffs, source snippets and stack traces.
+- **Cargo test / check / build:** compact passing Rust test targets and compilation
+  progress; preserve failed tests, panic backtraces and compiler diagnostics.
 - **Pytest / unittest:** remove passing progress output; preserve failure and
   collection-error blocks, tracebacks and summaries.
 - **npm / pnpm / yarn / pip / Poetry:** remove recognized installation progress;
@@ -35,7 +51,7 @@ to load the TypeScript hooks. Use `/reload-plugins` after editing them.
 - **TypeScript / ESLint / Ruff / Flake8:** remove known compiler banners;
   preserve diagnostic paths, line numbers, source excerpts, rules and warnings.
 
-Go and Cargo adapters are not implemented. Unknown commands, shell pipelines
+The Go adapter is not implemented. Unknown commands, shell pipelines
 and compound commands pass through unchanged. The generic head/tail adapter
 is tested as a standalone parser and is deliberately excluded from automatic
 routing to honor the safety rules in [AGENTS.md](AGENTS.md).
@@ -63,14 +79,26 @@ you remove them; automatic retention cleanup is not implemented.
 ## Commands
 
 - `/skim` or `/skim stats`: session and lifetime savings, reduction and adapter breakdown.
-- `/skim raw`: latest session archive path and its first 20 lines.
+- `/skim raw`: latest session archive path and its complete original contents.
 - `/skim toggle`: persistently pause or resume pruning.
 - `/skim help`: command reference.
+
+The status badge updates after pruning and on turn completion:
+
+```text
+⚡ Skim: -54.2k tokens (~$0.16) · 14 logs skimmed
+```
+
+`/skim stats` displays a boxed report with session savings, skimmed runs,
+average reduction, adapter breakdown and lifetime savings. The figures above
+are illustrative estimates, not measured billing credits.
 
 The status badge updates after pruning and on turn completion. Token estimates
 use `ceil(characters / 3.5)` per stream. Savings include the archive footer and
 use a fixed $3 per million input tokens for the approximate dollar figure.
-Lifetime counters assume one active session per plugin store.
+Lifetime counters assume one active session per plugin store. Filtering is local
+and deterministic; latency varies with the output size and local filesystem,
+so no fixed installation duration or universal sub-3ms runtime is promised.
 
 ## Privacy
 

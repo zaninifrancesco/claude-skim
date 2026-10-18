@@ -1,7 +1,7 @@
 {
   "name": "claude-skim",
   "version": "0.1.0",
-  "description": "Skim the noise, keep the signal. Zero-latency, 100% local stdout compression for Claude Code.",
+  "description": "Skim the noise, keep the signal. Automatic, 100% local Bash output filtering for Claude Code.",
   "keywords": [
     "claude-code",
     "claude-code-mod",
