@@ -23,6 +23,10 @@ describe('Java (Maven / Gradle / JUnit)', () => {
     const raw = fixture('mvn-test-passing');
     expect(adapter.prune(raw + raw).condensedStdout).toContain('32 tests across 6 suites');
   });
+  it('uses suite counts and timings when Maven has no aggregate or total duration', () => {
+    const raw = '[INFO] Running com.example.Test\n[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.4 s -- in com.example.Test\n[INFO] BUILD SUCCESS\n';
+    expect(adapter.prune(raw).condensedStdout).toBe('✅ All Java tests passed (4 tests across 1 suite in 0.4s)');
+  });
   it('keeps skipped counts and does not claim tests ran on clean-only or empty runs', () => {
     const raw = fixture('mvn-test-passing').replaceAll('Skipped: 0', 'Skipped: 1');
     expect(adapter.prune(raw).condensedStdout).toContain('1 skipped');
@@ -33,6 +37,10 @@ describe('Java (Maven / Gradle / JUnit)', () => {
   });
   it('summarizes Gradle without inventing counts', () => {
     expect(adapter.prune(fixture('gradle-test-passing')).condensedStdout).toBe('✅ All Java tests passed (4s)');
+    const counted = fixture('gradle-test-passing').replace('BUILD SUCCESSFUL', '16 tests completed, 0 failed, 2 skipped\nBUILD SUCCESSFUL');
+    expect(adapter.prune(counted).condensedStdout).toBe('✅ All Java tests passed (16 tests, 2 skipped in 4s)');
+    const empty = counted.replace('16 tests completed, 0 failed, 2 skipped', '0 tests completed');
+    expect(adapter.prune(empty).condensedStdout).not.toContain('All Java tests passed');
   });
   it('does not claim cached, skipped or absent Gradle tests executed', () => {
     const raw = fixture('gradle-test-passing');
@@ -67,6 +75,8 @@ describe('Java (Maven / Gradle / JUnit)', () => {
     const raw = fixture('mvn-test-failing').replace('org.opentest4j.AssertionFailedError:', '[INFO] --- expected assertion text ---\nDownloading from central: expected assertion text\norg.opentest4j.AssertionFailedError:');
     const block = raw.slice(raw.indexOf('[ERROR] Tests run: 3'), raw.indexOf('[INFO] Running com.example.util.'));
     expect(adapter.prune(raw).condensedStdout).toContain(block);
+    const misleading = fixture('mvn-compile-errors').replace('  symbol:', '[INFO] Results:\n[INFO] --- expected assertion text ---\n  symbol:');
+    expect(adapter.prune(misleading).condensedStdout).toContain(misleading.slice(misleading.indexOf('[ERROR]')));
   });
   it('handles ANSI and CRLF while retaining original failure bytes', () => {
     const raw = fixture('mvn-test-failing').replaceAll('[ERROR]', '\u001b[31m[ERROR]\u001b[0m').replaceAll('\n', '\r\n');
@@ -91,6 +101,8 @@ describe('Java (Maven / Gradle / JUnit)', () => {
     const stderrOnly = adapter.prune('', fixture('gradle-test-failing'));
     expect(stderrOnly.condensedStdout).toBe('');
     expect(stderrOnly.condensedStderr).toContain('Suppressed:');
+    const totals = '16 tests completed, 1 failed\n';
+    expect(adapter.prune(fixture('gradle-test-passing'), totals).condensedStdout).not.toContain('✅');
   });
   it('accounts for both streams using the existing token heuristic', () => {
     const out = fixture('mvn-test-failing');

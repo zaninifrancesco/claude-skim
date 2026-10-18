@@ -23,10 +23,10 @@
   - Passing path: strip dot matrices, keep count.
   - Failing path: preserve `=== FAILURES ===` block and tracebacks.
 - [x] **Task 2.4**: Write unit tests in `tests/adapters/pytest.test.ts` using fixtures (`fixtures/pytest-failing.log`).
-- [ ] **Task 2.5**: Implement `src/adapters/java.ts` matching `mvn test`, `gradle test`, etc.
+- [x] **Task 2.5**: Implement `src/adapters/java.ts` matching `mvn test`, `gradle test`, etc.
   - Passing path: strip plugin/download lines, collapse to `All Java tests passed`.
   - Failing path: strip info noise, preserve `[ERROR] Failures:` or `> Task :test FAILED` with full stack traces.
-- [ ] **Task 2.6**: Write unit tests in `tests/adapters/java.test.ts` using fixtures (`fixtures/mvn-test-failing.log`).
+- [x] **Task 2.6**: Write unit tests in `tests/adapters/java.test.ts` using fixtures (`fixtures/mvn-test-failing.log`).
 
 ---
 
