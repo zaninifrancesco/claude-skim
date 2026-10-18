@@ -21,7 +21,7 @@ Inside Claude Code, run:
 ```
 
 Skim is enabled automatically. Keep using Claude Code normally: no API keys,
-`.env` files, npm installation, build step or per-session flags are needed.
+`.env` files, manual npm commands, build step or per-session flags are needed.
 The one-command marketplace installer requires Claude Code 2.1.275 or later
 with Function Hooks support.
 
