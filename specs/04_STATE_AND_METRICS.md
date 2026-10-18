@@ -48,7 +48,7 @@ interface PersistentStoreData {
   lastPrunedTimestamp: number;
   userConfig: {
     enabled: boolean;
-    minLineThreshold: number; // default: 35
+    minLineThreshold: number; // default: 30
     archiveRetentionDays: number; // default: 7
     showStatusBadge: boolean; // default: true
   };

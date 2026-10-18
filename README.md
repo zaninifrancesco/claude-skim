@@ -1,112 +1,103 @@
 # ⚡ Claude Skim
 
-[![Claude Code Mod](https://img.shields.io/badge/claude--code-mod-blueviolet?style=for-the-badge)](https://mods.aidojo.si)
-[![Zero Network](https://img.shields.io/badge/network-100%25%20local-brightgreen?style=for-the-badge)](#privacy--local-first)
-[![Token Reduction](https://img.shields.io/badge/token%20reduction-up%20to%2085%25-orange?style=for-the-badge)](#how-it-works)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
+[![Local processing](https://img.shields.io/badge/processing-100%25%20local-brightgreen)](#privacy)
+[![Runtime dependencies](https://img.shields.io/badge/runtime%20dependencies-zero-blue)](#development)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-> **Skim the noise, keep the signal.**  
-> Zero-latency, 100% local stdout compression for Claude Code. Slashes context token consumption by up to 85% on tests, builds, and package managers with **zero external API keys**.
+**Skim the noise, keep the signal.**
 
----
+A Claude Code Function Hooks plugin that filters known noisy Bash outputs using
+local TypeScript heuristics. Every modified result links to an archived copy of
+the full raw output. No network requests, external models or API keys are used
+by the plugin.
 
-## ⚡ The Problem
+## Load the plugin
 
-When Claude Code executes commands like `npm test`, `pytest`, or `cargo test`, **hundreds of lines of stdout** are injected directly into the conversation context. 
-
-- **149 passing tests** dump 3,000+ useless tokens into context before the 1 failing test is shown.
-- **Context Rot**: Claude gets overwhelmed by boilerplate and forgets earlier prompt instructions.
-- **Money Drain**: Each turn costs more as the context window blows up with terminal garbage.
-- **Premature `/compact`**: Context runs out twice as fast.
-
----
-
-## 🚀 The Solution
-
-`skim` intercepts Bash tool calls inside Claude Code and intelligently filters noise **before** text reaches Claude's context window.
-
-```
-+-------------------------------------------------------------------------+
-|                                                                         |
-|  RAW STDOUT (350 lines)                 SKIMMED STDOUT (12 lines)       |
-|  ---------------------                  -------------------------       |
-|  ✓ test/math.spec.ts (2ms)              [skim: 149 passing tests        |
-|  ✓ test/user.spec.ts (4ms)               omitted for brevity]           |
-|  ... [148 passing tests] ...       ==>                                  |
-|  FAIL test/auth.spec.ts                 FAIL test/auth.spec.ts          |
-|  ● Auth > should reject token           ● Auth > should reject token    |
-|    Expected: 401, Received: 200           Expected: 401, Received: 200  |
-|                                                                         |
-|  Full raw log archived: .claude/skim/runs/run-104.log                   |
-|                                                                         |
-+-------------------------------------------------------------------------+
-```
-
-### Key Highlights:
-- 🔒 **100% Local & Private**: No data leaves your machine. No external LLM or API keys required.
-- ⚡ **Zero Latency (< 3ms)**: Ultra-fast TypeScript regex & AST heuristics instead of slow remote API roundtrips.
-- 🎯 **Zero Information Loss on Errors**: Retains 100% of stack traces, assertion failures, error messages, and line numbers.
-- 💾 **Full Raw Log Archival**: Every uncompressed output is saved locally to `.claude/skim/runs/` with a link directly in the prompt.
-- 📊 **Real-Time Savings Banner**: See how many tokens and dollars you've saved right above your prompt.
-
----
-
-## Implementation status
-
-Phases 1–2 are implemented and tested: token estimates, raw log archiving,
-Jest/Vitest and Pytest/unittest adapters. The engine and hook registration are
-still pending, so the plugin does not yet intercept Bash output. The adapters
-are pure parsers; archiving, thresholds and raw-log footers will be enforced by
-the engine in phase 4. See the [task backlog](specs/07_TASK_BACKLOG.md).
-
-## 📦 Installation
-
-In any active Claude Code terminal session:
+Requires a Claude Code build supporting the Function Hooks API. The bundled
+API declarations are from Claude Code 2.1.274.
 
 ```bash
-/plugin install skim --marketplace username/claude-skim
+git clone https://github.com/zaninifrancesco/claude-skim.git
+claude --plugin-dir ./claude-skim
 ```
 
-Then reload plugins:
+This loads the plugin for that session. No npm installation or build is needed
+to load the TypeScript hooks. Use `/reload-plugins` after editing them.
+
+## Supported output
+
+- **Jest / Vitest:** compact passing summaries; preserve failing test names,
+  assertion diffs, source snippets and stack traces.
+- **Pytest / unittest:** remove passing progress output; preserve failure and
+  collection-error blocks, tracebacks and summaries.
+- **npm / pnpm / yarn / pip / Poetry:** remove recognized installation progress;
+  preserve package counts, security summaries, unknown messages and fatal errors.
+- **TypeScript / ESLint / Ruff / Flake8:** remove known compiler banners;
+  preserve diagnostic paths, line numbers, source excerpts, rules and warnings.
+
+Go and Cargo adapters are not implemented. Unknown commands, shell pipelines
+and compound commands pass through unchanged. The generic head/tail adapter
+is tested as a standalone parser and is deliberately excluded from automatic
+routing to honor the safety rules in [AGENTS.md](AGENTS.md).
+
+## Behavior
+
+Pruning requires at least **30 lines and 1,500 characters**. Short, unknown,
+binary, image, background, interrupted or externally persisted outputs pass
+through unchanged. Permission failures and hard tool errors also pass through.
+
+Only recognized noise is removed. Ambiguous formats are retained. A parser or
+archive failure returns the original answer. If the footer would erase the
+token savings, the original answer is returned too.
+
+Every changed output includes a footer such as:
+
+```text
+[skim: condensed 350 lines -> 12 lines. Full raw log: .claude/skim/runs/run-<timestamp>-<id>.log]
+```
+
+Raw stdout followed by raw stderr is written without text normalization before
+any modified answer is returned. Archives remain in `.claude/skim/runs/` until
+you remove them; automatic retention cleanup is not implemented.
+
+## Commands
+
+- `/skim` or `/skim stats`: session and lifetime savings, reduction and adapter breakdown.
+- `/skim raw`: latest session archive path and its first 20 lines.
+- `/skim toggle`: persistently pause or resume pruning.
+- `/skim help`: command reference.
+
+The status badge updates after pruning and on turn completion. Token estimates
+use `ceil(characters / 3.5)` per stream. Savings include the archive footer and
+use a fixed $3 per million input tokens for the approximate dollar figure.
+Lifetime counters assume one active session per plugin store.
+
+## Privacy
+
+Processing, archives and metrics stay local. The runtime has no external
+package dependencies and performs no HTTP requests or subprocess calls.
+`node_modules/`, `dist/` and `.claude/skim/` are excluded from Git.
+
+## Development
+
 ```bash
-/reload-plugins
+npm ci
+npm test
+npm run lint
+npm run build
+claude plugin validate . --strict
 ```
 
-That's it! `skim` is active immediately.
+Vitest tests use synthetic terminal logs in [fixtures/](fixtures/) and cover
+passing summaries, full failure blocks, stream accounting, raw archiving,
+pass-through rules, hook registration and slash commands. Runtime code uses
+only the host API and JavaScript built-ins.
 
----
+The shipped hooks follow the bundled runtime declarations: slash command
+handlers use `command.run`, session shutdown uses `classic.SessionEnd`, and
+filesystem operations are declared at the hook call sites for permission
+analysis. See [specs/](specs/) and the [completed backlog](specs/07_TASK_BACKLOG.md).
 
-## 🛠️ Supported Tools & Adapters
+## License
 
-| Category | Supported Tools | What Gets Skimmed | What Gets Preserved |
-| :--- | :--- | :--- | :--- |
-| **Node.js** | Jest, Vitest, `npm test` | Passing tests, timing noise, checkmarks | Failing suites, assertion diffs, stack traces |
-| **Python** | Pytest, Unittest | Dot progress matrices (`.....`), plugin banners | `=== FAILURES ===` block, tracebacks, error codes |
-| **Rust** | Cargo test, Cargo check | `Compiling...` logs, passing test lines | Panic backtraces, compiler error diagnostics (`^^^`) |
-| **Go** | Go test | `=== RUN`, `--- PASS` rows | `--- FAIL`, package error output, line numbers |
-| **Package Managers** | npm, pnpm, yarn, pip | Progress bars, download spinners, audit banners | Added package count, fatal resolution errors |
-| **Linters & Compilers**| TypeScript (`tsc`), ESLint, Ruff | Clean passes, boilerplate ASCII headers | File:line:col errors, error codes, summaries |
-| **Fallback** | Any generic command ($> 35$ lines) | Intermediary noise | Head (first 10 lines) + Tail (last 25 lines) |
-
----
-
-## 💻 Terminal Commands
-
-- `/skim` or `/skim stats`: Display session and lifetime savings report.
-- `/skim raw`: Show the path to the most recently pruned log file.
-- `/skim toggle`: Temporarily pause or resume stdout compression.
-
----
-
-## 🏗️ Architecture & Specifications
-
-This repository strictly follows **Spec-Driven AI Development**:
-- Detailed technical specifications are located in [`specs/`](specs/).
-- Agent operating instructions are in [`AGENTS.md`](AGENTS.md).
-- Real-world log fixtures are in [`fixtures/`](fixtures/).
-
----
-
-## 📄 License
-
-MIT © [Francesco Zanini](https://github.com/francescozanini)
+MIT © 2026 Francesco Zanini

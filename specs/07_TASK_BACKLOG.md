@@ -46,20 +46,33 @@
 ---
 
 ## Phase 5: Hook Registration, UI & Slash Command
-- [ ] **Task 5.1**: Implement `hooks/register.ts`:
+- [x] **Task 5.1**: Implement `hooks/register.ts`:
   - Hook `session.start`: load config from `$.store`, mount `/skim` slash command.
   - Hook `tool.call` (`{ tool: 'Bash' }`): invoke `engine.processToolCall()`.
   - Hook `turn.complete`: update `$.ui.status()` with real-time token savings.
   - Hook `session.end`: persist lifetime metrics into `$.store`.
-- [ ] **Task 5.2**: Implement Slash command handler for `/skim`:
+- [x] **Task 5.2**: Implement Slash command handler for `/skim`:
   - `/skim stats`: print formatted summary card.
   - `/skim raw`: print path to latest archived log.
   - `/skim toggle`: pause/resume pruning.
-- [ ] **Task 5.3**: Run `npm run build` to compile TypeScript into `dist/`.
+- [x] **Task 5.3**: Run `npm run build` to compile TypeScript into `dist/`.
 
 ---
 
 ## Phase 6: Validation, Badges & GitHub Release
-- [ ] **Task 6.1**: Run `claude plugin validate .` and ensure 0 errors and reported footprint.
-- [ ] **Task 6.2**: Verify `README.md` formatting and badges.
-- [ ] **Task 6.3**: Prepare PR submission template for `karanb192/awesome-claude-code-mods`.
+- [x] **Task 6.1**: Run `claude plugin validate .` and ensure 0 errors and reported footprint.
+- [x] **Task 6.2**: Verify `README.md` formatting and badges.
+- [x] **Task 6.3**: Prepare PR submission template for `karanb192/awesome-claude-code-mods`.
+
+## Implementation notes
+
+- `AGENTS.md` takes precedence: the minimum is 30 lines, and unknown commands
+  pass through. The standalone fallback is not selected by the router.
+- The bundled Claude Code 2.1.274 types expose `classic.SessionEnd` and
+  `command.run`; the earlier `session.end` and command `handler` examples are
+  superseded by those host interfaces.
+- `claude plugin validate . --strict` verifies filesystem read/write and UI
+  calls with zero errors and warnings. Calls to `$` stay in the hook module.
+- Task 6.3 is a local draft in `docs/awesome-claude-code-mods-submission.md`;
+  no upstream PR or release has been published.
+- Go/Cargo adapters and automatic archive cleanup are outside this checklist.

@@ -1,5 +1,9 @@
 # 03 - Adapter Specifications & Parsing Rules
 
+> Safety precedence: retain every stack frame, including `node_modules` frames.
+> The fallback is standalone and retains output containing diagnostics; the
+> router passes unknown commands through unchanged (`AGENTS.md`).
+
 ## 1. Overview & General Adapter Interface
 
 Every tool adapter must implement the `ToolAdapter` interface:
@@ -37,7 +41,7 @@ export interface ToolAdapter {
        ✅ All tests passed (142 tests across 12 suites in 3.4s)
        ```
   2. **Tests Failed**:
-     - Strips: all passing test lines (`✓ test/pass.spec.ts`), redundant separator lines (`----`, `====`), node_modules stack frames.
+     - Strips: all passing test lines (`✓ test/pass.spec.ts`), redundant separator lines (`----`, `====`).
      - Preserves:
        - Header line: `FAIL src/auth/login.spec.ts`
        - Test name: `● Auth > should reject expired JWT`

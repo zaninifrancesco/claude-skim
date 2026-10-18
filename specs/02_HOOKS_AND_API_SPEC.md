@@ -1,5 +1,13 @@
 # 02 - Claude Code Hooks & API Specification
 
+> Runtime compatibility: `types/claude-code.d.ts` (Claude Code 2.1.274) is
+> authoritative. Use `classic.SessionEnd` for shutdown, register command metadata
+> with `$.command.register` and handle it with `on('command.run', ...)`.
+> `$.store.get` returns `unknown`; `$.ui.status(undefined)` clears the badge.
+> Host calls must appear in the hook module for static permission analysis.
+> When replacing a tool result, omit the old `ref` and `text` so the host renders
+> the new output. The examples below describe the original proposed interface.
+
 ## 1. Scope & Objective
 
 This document defines the exact TypeScript interface contracts between **`claude-skim`** and the Claude Code runtime environment. The incoming coding agent must implement `hooks/register.ts` strictly complying with these signatures.

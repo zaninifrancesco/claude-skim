@@ -1,5 +1,8 @@
 # 01 - System Architecture & Pipeline Design
 
+> Implementation precedence: unknown commands pass through unchanged; the generic
+> fallback is standalone. The minimum line threshold is 30 (`AGENTS.md`).
+
 ## 1. High-Level Architecture
 
 `claude-skim` is implemented as an in-process Claude Code Function Hooks plugin. It does not spawn background daemon processes; it hooks synchronously into the Claude Code event loop via `register.ts`.
@@ -64,7 +67,7 @@ Inspects the command string (`event.command`) and the output length to determine
 - **Bypass Conditions** (returns original untouched):
   - Plugin is toggled off (`state.enabled === false`).
   - Command is in the bypass list (`cat`, `echo`, `head`, `tail`, `curl`, `wget`, `nano`, `vi`).
-  - Output is below the threshold: `output.split('\n').length < MIN_LINE_THRESHOLD` (default: 35 lines) or `output.length < 1500 chars`.
+  - Output is below the threshold: `output.split('\n').length < MIN_LINE_THRESHOLD` (default: 30 lines) or `output.length < 1500 chars`.
   - Output appears to be binary or base64.
   - Tool execution produced a hard system error or denied permission.
 
@@ -76,7 +79,7 @@ Matches the CLI command to a specialized adapter:
 - **`CargoTestAdapter`**: Matches `cargo test`, `cargo build`.
 - **`PackageManagerAdapter`**: Matches `npm install`, `npm i`, `pnpm i`, `yarn add`, `pip install`, `poetry install`.
 - **`CompilerLinterAdapter`**: Matches `tsc`, `eslint`, `ruff`, `flake8`.
-- **`GenericFallbackAdapter`**: Any command exceeding line limits without a specialized adapter.
+- **`GenericFallbackAdapter`**: Standalone parser only; unknown commands pass through per `AGENTS.md`.
 
 ### 2.4 The Archiver (`src/archiver.ts`)
 Whenever an output is modified:
