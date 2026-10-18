@@ -7,12 +7,13 @@ const download = /^(?:\[INFO\]\s+)?(?:Downloading from |Downloaded from |Progres
 const gradleTask = /^> Task :[\w:.-]+(?: (?:UP-TO-DATE|NO-SOURCE|SKIPPED|FROM-CACHE))?$/;
 const gradleSuccess = /^BUILD SUCCESSFUL in (.+)$/;
 const gradleSummary = /^(\d+) tests? completed(?:, (\d+) failed)?(?:, (\d+) skipped)?$/;
-const diagnostic = /(?:^\[ERROR\]|^\[WARNING\]|^WARNING:|\b[\w.$]*(?:Exception|Error)(?::|$)|\berror:|\bFAILED\b|^FAILURE:|BUILD FAILURE|<<< FAILURE!)/;
+const diagnostic = /(?:^\[ERROR\]|^\[WARNING\]|^WARNING:|(?:Exception|Error)(?::|$)|\berror:|\bFAILED\b|^FAILURE:|BUILD FAILURE|<<< FAILURE!)/;
 
 function isDiagnostic(line: string): boolean {
+  if (diagnostic.test(line)) return true;
   const maven = line.match(mavenSummary);
   const gradle = line.match(gradleSummary);
-  return diagnostic.test(line) || !!(maven && (Number(maven[2]) || Number(maven[3])))
+  return !!(maven && (Number(maven[2]) || Number(maven[3])))
     || !!(gradle && Number(gradle[2]));
 }
 
@@ -25,8 +26,7 @@ function noise(line: string): boolean {
 function condense(text: string, allowSuccess: boolean): string {
   const raw = text.split('\n');
   const lines = raw.map(plainLine);
-  const hasDiagnostic = lines.some(isDiagnostic);
-  if (allowSuccess && !hasDiagnostic) {
+  if (allowSuccess) {
     const summaries = lines.map((line) => line.match(mavenSummary)).filter((match) => match !== null);
     if (lines.includes('[INFO] BUILD SUCCESS') && lines.every((line) => noise(line) || mavenSummary.test(line))
       && summaries.every((match) => match[2] === '0' && match[3] === '0')) {
@@ -53,7 +53,7 @@ function condense(text: string, allowSuccess: boolean): string {
       return `✅ ${executedTests ? 'All Java tests passed' : 'Java build successful'} (${counts ? `${counts} in ` : ''}${success[1]})`;
     }
   }
-  if (!hasDiagnostic) return text;
+  if (allowSuccess || !lines.some(isDiagnostic)) return text;
 
   let inDiagnostic = false;
   const kept: string[] = [];
