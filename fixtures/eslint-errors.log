@@ -1,0 +1,8 @@
+> demo@1.0.0 lint
+> eslint .
+
+/Users/dev/project/src/auth.ts
+  12:3  error  'token' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  28:5  warning  Unexpected console statement  no-console
+
+✖ 2 problems (1 error, 1 warning)
