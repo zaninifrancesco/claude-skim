@@ -5,6 +5,7 @@ describe('command router', () => {
   it.each([
     ['npm test', 'Jest / Vitest'], ['pytest', 'Pytest / unittest'],
     ['cargo test', 'Cargo'], ['npm install', 'Package managers'], ['npx tsc', 'Compilers / linters'],
+    ['mvn clean test', 'Java (Maven / Gradle)'], ['./gradlew check', 'Java (Maven / Gradle)'],
   ])('routes %s to its specialized adapter', (command, name) => {
     expect(routeCommand(command, '')?.name).toBe(name);
   });

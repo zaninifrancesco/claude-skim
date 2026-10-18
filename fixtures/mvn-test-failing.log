@@ -1,0 +1,56 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.example:demo-service >----------------------
+[INFO] Building demo-service 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:3.3.1:resources (default-resources) @ demo-service ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.11.0:compile (default-compile) @ demo-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:3.3.1:testResources (default-testResources) @ demo-service ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.11.0:testCompile (default-testCompile) @ demo-service ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 4 source files with javac [debug target 17] to target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.1.2:test (default-test) @ demo-service ---
+[INFO] Using auto detected provider: org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.service.UserServiceTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.412 s -- in com.example.service.UserServiceTest
+[INFO] Running com.example.auth.AuthTokenTest
+[ERROR] Tests run: 3, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.185 s <<< FAILURE! -- in com.example.auth.AuthTokenTest
+[ERROR] com.example.auth.AuthTokenTest.shouldRejectExpiredToken -- Time elapsed: 0.045 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <401> but was: <200>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:563)
+	at com.example.auth.AuthTokenTest.shouldRejectExpiredToken(AuthTokenTest.java:42)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+[INFO] Running com.example.util.DateUtilsTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s -- in com.example.util.DateUtilsTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   AuthTokenTest.shouldRejectExpiredToken:42 expected: <401> but was: <200>
+[INFO] 
+[ERROR] Tests run: 16, Failures: 1, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.214 s
+[INFO] Finished at: 2026-10-18T20:20:00+02:00
+[INFO] ------------------------------------------------------------------------

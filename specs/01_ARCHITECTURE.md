@@ -77,6 +77,7 @@ Matches the CLI command to a specialized adapter:
 - **`PytestAdapter`**: Matches `pytest`, `python -m unittest`, `python -m pytest`.
 - **`GoTestAdapter`**: Matches `go test`.
 - **`CargoTestAdapter`**: Matches `cargo test`, `cargo build`.
+- **`JavaAdapter`**: Matches `mvn test`, `mvn clean`, `./mvnw test`, `gradle test`, `./gradlew test`.
 - **`PackageManagerAdapter`**: Matches `npm install`, `npm i`, `pnpm i`, `yarn add`, `pip install`, `poetry install`.
 - **`CompilerLinterAdapter`**: Matches `tsc`, `eslint`, `ruff`, `flake8`.
 - **`GenericFallbackAdapter`**: Standalone parser only; unknown commands pass through per `AGENTS.md`.

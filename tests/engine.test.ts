@@ -1,4 +1,6 @@
 import type { ToolCallResult } from 'claude-code';
+import { readFileSync } from 'node:fs';
+import { URL } from 'node:url';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { processToolCall, MIN_LINES_THRESHOLD } from '../src/engine.js';
 import { createSessionMetrics } from '../src/metrics.js';
@@ -15,6 +17,17 @@ function stdout(value: ToolCallResult<'Bash'>): string {
 afterEach(() => vi.restoreAllMocks());
 
 describe('pruning engine', () => {
+  it('routes Java failures, archives the exact log and counts Java savings', async () => {
+    const raw = readFileSync(new URL('../fixtures/mvn-test-failing.log', import.meta.url), 'utf8');
+    const $ = host();
+    const state = createSessionMetrics();
+    const input = { result: { ...answer(raw).result, exitCode: 1 } };
+    const output = await processToolCall($, 'mvn test', input, state);
+    expect(stdout(output)).toContain('AuthTokenTest.java:42');
+    expect(stdout(output)).toContain(`Full raw log: ${state.lastRawLog}`);
+    expect($.fs.write).toHaveBeenCalledWith(state.lastRawLog, raw);
+    expect(state.adapterBreakdown['Java (Maven / Gradle)']?.runs).toBe(1);
+  });
   it('archives the exact raw streams before returning a modified result', async () => {
     const $ = host();
     const state = createSessionMetrics();

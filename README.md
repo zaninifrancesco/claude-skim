@@ -46,6 +46,7 @@ loads the checked-out plugin for one session.
   progress; preserve failed tests, panic backtraces and compiler diagnostics.
 - **Pytest / unittest:** remove passing progress output; preserve failure and
   collection-error blocks, tracebacks and summaries.
+- **Java (Maven / Gradle / JUnit):** compact verbose dependency download tickers, plugin executions, and passing test suites; preserve `[ERROR] Failures:` blocks, Gradle task failures, assertion diffs, and full stack traces.
 - **npm / pnpm / yarn / pip / Poetry:** remove recognized installation progress;
   preserve package counts, security summaries, unknown messages and fatal errors.
 - **TypeScript / ESLint / Ruff / Flake8:** remove known compiler banners;

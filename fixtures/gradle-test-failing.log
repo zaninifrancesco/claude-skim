@@ -1,0 +1,31 @@
+> Task :compileJava UP-TO-DATE
+> Task :processResources NO-SOURCE
+> Task :classes UP-TO-DATE
+> Task :compileTestJava
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+
+com.example.AuthTest > testExpiredToken() FAILED
+    org.opentest4j.AssertionFailedError: expected: <401> but was: <200>
+        at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+        at com.example.AuthTest.testExpiredToken(AuthTest.java:42)
+    Caused by: java.lang.IllegalStateException: token was accepted
+        at com.example.AuthService.validate(AuthService.java:80)
+        Suppressed: java.io.IOException: cleanup failed
+            at com.example.AuthTest.close(AuthTest.java:91)
+        ... 12 more
+
+16 tests completed, 1 failed, 2 skipped
+> Task :test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':test'.
+> There were failing tests. See the report at: file:///project/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 3s
+6 actionable tasks: 2 executed, 4 up-to-date

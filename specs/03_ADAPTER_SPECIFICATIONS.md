@@ -102,7 +102,30 @@ export interface ToolAdapter {
 
 ---
 
-### 2.5 `PackageManagerAdapter` (npm, pnpm, yarn, pip)
+### 2.5 `JavaAdapter` (Maven, Gradle, JUnit)
+- **Matches**: `mvn test*`, `mvn clean*`, `./mvnw test*`, `mvn verify*`, `gradle test*`, `./gradlew test*`, `gradle check*`, `./gradlew check*`.
+- **Noise Characteristics**:
+  - Extremely verbose: `[INFO] Scanning for projects...`, `[INFO] --- maven-resources-plugin...`, `Downloading from central...`, `> Task :compileJava`, `> Task :processResources`.
+- **Parsing Logic**:
+  1. **All Tests Passed**:
+     - Strips: all `[INFO] --- plugin...`, dependency downloads, `[INFO] Running com.example.*` lines.
+     - Preserves: test count & execution time from `[INFO] Tests run: X, Failures: 0, Errors: 0, Skipped: 0` or Gradle `BUILD SUCCESSFUL`.
+     - Condensed Output:
+       ```text
+       ✅ All Java tests passed (142 tests across 8 suites in 4.2s)
+       ```
+  2. **Tests Failed / Build Error**:
+     - Strips: all plugin execution boilerplate, passing test suites, repetitive reactor summary banners.
+     - Preserves:
+       - Maven Surefire `[ERROR] Failures:` and `[ERROR] Errors:` blocks.
+       - Gradle `> Task :test FAILED` and failing test methods (`com.example.AuthTest > testExpiredToken() FAILED`).
+       - Full assertion error messages (`org.opentest4j.AssertionFailedError: expected: <401> but was: <200>`).
+       - Full stack trace frames.
+       - Summary line: `[ERROR] Tests run: 142, Failures: 1, Errors: 0, Skipped: 0`.
+
+---
+
+### 2.6 `PackageManagerAdapter` (npm, pnpm, yarn, pip)
 - **Matches**: `npm i*`, `pnpm i*`, `yarn add*`, `pip install*`, `poetry add*`.
 - **Noise Characteristics**:
   - `npm notice`, download progress bars `[=======>    ]`, `reify:rxjs: timing`, `npm warn deprecated`, pip wheel download bars.
@@ -115,7 +138,7 @@ export interface ToolAdapter {
 
 ---
 
-### 2.6 `CompilerLinterAdapter` (tsc, eslint, ruff)
+### 2.7 `CompilerLinterAdapter` (tsc, eslint, ruff)
 - **Matches**: `tsc`, `npx tsc`, `eslint`, `npx eslint`, `ruff check`.
 - **Parsing Logic**:
   - Clean runs (exitCode 0) -> condensed to `✅ No lint/type errors found`.
@@ -126,7 +149,7 @@ export interface ToolAdapter {
 
 ---
 
-### 2.7 `GenericFallbackAdapter`
+### 2.8 `GenericFallbackAdapter`
 - **Matches**: Any command output with $> 35$ lines that does not match a specialized adapter.
 - **Algorithm (Head & Tail Smart Truncate)**:
   - Keep first 10 lines (command initialization, banner, configuration).
