@@ -24,6 +24,20 @@ describe('/skim', () => {
     expect(report).toContain('Lifetime Savings: 850 tokens');
     expect(report).toContain('.claude/skim/runs/');
   });
+  it('renders an aligned savings card with the requested labels', async () => {
+    const state = createSessionMetrics();
+    state.tokensSaved = 54_210;
+    state.runsPruned = 14;
+    state.tokensBeforePruning = 69_145;
+    const report = await handleSkimCommand(host(), 'stats', state, { tokensSaved: 1_365_790, runsPruned: 100 });
+    expect(report).toContain('Session Tokens Saved: 54,210 tokens (~$0.16)');
+    expect(report).toContain('Session Logs Skimmed: 14 command runs');
+    expect(report).toContain('Lifetime Savings: 1.42M tokens (~$4.26 saved)');
+    expect(report.startsWith('╭')).toBe(true);
+    expect(report.trimEnd().endsWith('╯')).toBe(true);
+    const widths = report.split('\n').map((line) => [...line].reduce((width, ch) => width + (ch === '⚡' ? 2 : 1), 0));
+    expect(new Set(widths).size).toBe(1);
+  });
   it('persists toggle state before updating the UI', async () => {
     const $ = host();
     const state = createSessionMetrics();
@@ -41,7 +55,7 @@ describe('/skim', () => {
     await expect(handleSkimCommand($, 'toggle', state, { tokensSaved: 0, runsPruned: 0 })).rejects.toThrow('disk full');
     expect(state.enabled).toBe(true);
   });
-  it('shows the latest archive path and only its first twenty lines', async () => {
+  it('shows the latest archive path and complete contents', async () => {
     const $ = host();
     const state = createSessionMetrics();
     expect(await handleSkimCommand($, 'raw', state, { tokensSaved: 0, runsPruned: 0 })).toContain('No output');
@@ -49,7 +63,7 @@ describe('/skim', () => {
     const text = await handleSkimCommand($, 'raw', state, { tokensSaved: 0, runsPruned: 0 });
     expect(text).toContain(state.lastRawLog);
     expect(text).toContain('line 19');
-    expect(text).not.toContain('line 20');
+    expect(text).toContain('line 29');
     expect($.fs.read).toHaveBeenCalledWith(state.lastRawLog);
   });
   it('provides help for unsupported subcommands', async () => {
@@ -61,6 +75,6 @@ describe('/skim', () => {
     expect(formatStatus(state)).toBe('⚡ Skim: Active (monitoring stdout)');
     state.tokensSaved = 48200;
     state.runsPruned = 12;
-    expect(formatStatus(state)).toBe('⚡ Skim: -48.2k tokens (~$0.14) · 12 pruned');
+    expect(formatStatus(state)).toBe('⚡ Skim: -48.2k tokens (~$0.14) · 12 logs skimmed');
   });
 });

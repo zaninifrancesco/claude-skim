@@ -76,3 +76,10 @@
 - Task 6.3 is a local draft in `docs/awesome-claude-code-mods-submission.md`;
   no upstream PR or release has been published.
 - Go/Cargo adapters and automatic archive cleanup are outside this checklist.
+
+
+## Phase 7: Zero-Configuration User Experience
+- [ ] **Task 7.1**: Publishable marketplace manifest and one-command install documentation.
+- [ ] **Task 7.2**: Add Cargo test/build/check parsing with failure-preserving fixtures and tests.
+- [ ] **Task 7.3**: Match the savings badge and boxed report, and show the complete `/skim raw` log.
+- [ ] **Task 7.4**: Validate installation in an isolated user configuration and run host integration tests.

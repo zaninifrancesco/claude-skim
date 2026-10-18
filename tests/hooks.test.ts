@@ -72,7 +72,7 @@ describe('host hooks', () => {
     expect(first).toMatchObject({ lifetimeTokensSaved: expect.any(Number), lifetimeRunsPruned: 3 });
     await call('classic.SessionEnd');
     expect(stored.skim_lifetime_metrics).toEqual(first);
-    expect($.ui.status).toHaveBeenLastCalledWith(expect.stringContaining('1 pruned'));
+    expect($.ui.status).toHaveBeenLastCalledWith(expect.stringContaining('1 logs skimmed'));
   });
   it('returns the pruned result even when the status UI fails', async () => {
     const { $, call } = setup();
