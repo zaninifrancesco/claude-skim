@@ -1,0 +1,46 @@
+> my-app@1.0.0 test
+> jest
+
+ PASS  src/utils/math.spec.ts
+  ✓ adds two numbers (2 ms)
+  ✓ subtracts two numbers (1 ms)
+  ✓ multiplies two numbers (1 ms)
+
+ PASS  src/services/logger.spec.ts
+  ✓ formats debug log (3 ms)
+  ✓ formats info log (1 ms)
+  ✓ suppresses trace in production (2 ms)
+
+ FAIL  src/auth/jwt.spec.ts
+  ● JWT Authentication › should reject expired token with 401
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 401
+    Received: 200
+
+      34 |     const res = await request(app).get('/api/protected').set('Authorization', `Bearer ${token}`);
+      35 | 
+    > 36 |     expect(res.status).toBe(401);
+         |                        ^
+      37 |     expect(res.body.error).toMatch(/token expired/i);
+      38 |   });
+      39 | });
+
+      at Object.<anonymous> (src/auth/jwt.spec.ts:36:24)
+      at Promise.then.completed (node_modules/jest-circus/build/utils.js:298:28)
+      at new Promise (<anonymous>)
+      at callAsyncCircusFn (node_modules/jest-circus/build/utils.js:231:10)
+      at _callCircusTest (node_modules/jest-circus/build/run.js:316:40)
+      at processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+ PASS  src/models/user.spec.ts
+  ✓ creates valid user (4 ms)
+  ✓ validates email format (2 ms)
+  ✓ hashes password before save (12 ms)
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       1 failed, 8 passed, 9 total
+Snapshots:   0 total
+Time:        1.842 s
+Ran all test suites.

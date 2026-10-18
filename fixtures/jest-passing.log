@@ -1,0 +1,28 @@
+> my-app@1.0.0 test
+> jest
+
+ PASS  src/utils/math.spec.ts
+  ✓ adds two numbers (2 ms)
+  ✓ subtracts two numbers (1 ms)
+  ✓ multiplies two numbers (1 ms)
+
+ PASS  src/services/logger.spec.ts
+  ✓ formats debug log (3 ms)
+  ✓ formats info log (1 ms)
+  ✓ suppresses trace in production (2 ms)
+
+ PASS  src/auth/jwt.spec.ts
+  ✓ generates valid token (5 ms)
+  ✓ verifies valid token (3 ms)
+  ✓ rejects expired token with 401 (4 ms)
+
+ PASS  src/models/user.spec.ts
+  ✓ creates valid user (4 ms)
+  ✓ validates email format (2 ms)
+  ✓ hashes password before save (12 ms)
+
+Test Suites: 4 passed, 4 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        1.458 s
+Ran all test suites.

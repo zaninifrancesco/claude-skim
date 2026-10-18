@@ -1,0 +1,23 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.8, pytest-7.4.3, pluggy-1.3.0
+rootdir: /Users/dev/project
+plugins: asyncio-0.21.1, cov-4.1.0
+collected 28 items
+
+tests/test_api.py .........                                              [ 32%]
+tests/test_database.py ....F............                                [ 89%]
+tests/test_utils.py ...                                                  [100%]
+
+=================================== FAILURES ===================================
+___________________________ test_connection_timeout ____________________________
+
+db = <DatabaseClient state=DISCONNECTED>
+
+    def test_connection_timeout(db):
+>       res = db.connect(timeout=0.001)
+E       TimeoutError: Connection timed out after 0.001s
+
+tests/test_database.py:48: TimeoutError
+=========================== short test summary info ============================
+FAILED tests/test_database.py::test_connection_timeout - TimeoutError: Connection timed out after 0.001s
+========================= 1 failed, 27 passed in 1.84s =========================

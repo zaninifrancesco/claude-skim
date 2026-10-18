@@ -1,0 +1,13 @@
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory.
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+[##################] \ reify:rxjs: timing reifyNode:node_modules/rxjs Completed in 142ms
+[##################] / reify:eslint: timing reifyNode:node_modules/eslint Completed in 480ms
+[##################] - reify:@types/node: timing reifyNode:node_modules/@types/node Completed in 80ms
+[##################] \ reify:typescript: timing reifyNode:node_modules/typescript Completed in 620ms
+
+added 142 packages, and audited 143 packages in 3s
+
+24 packages are looking for funding
+  run `npm fund` to find out
+
+found 0 vulnerabilities
