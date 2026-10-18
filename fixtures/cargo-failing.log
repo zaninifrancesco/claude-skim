@@ -1,0 +1,22 @@
+running 3 tests
+test tests::adds ... ok
+test tests::subtracts ... FAILED
+test tests::multiplies ... ok
+
+failures:
+
+---- tests::subtracts stdout ----
+thread 'tests::subtracts' panicked at src/lib.rs:42:9:
+assertion `left == right` failed
+  left: 5
+ right: 3
+stack backtrace:
+   0: rust_begin_unwind
+             at /rustc/library/std/src/panicking.rs:697:5
+   1: example::tests::subtracts
+             at ./src/lib.rs:42:9
+
+failures:
+    tests::subtracts
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
