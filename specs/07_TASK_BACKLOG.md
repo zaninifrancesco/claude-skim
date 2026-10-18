@@ -39,9 +39,9 @@
 ---
 
 ## Phase 4: Engine Pipeline & Command Router
-- [ ] **Task 4.1**: Implement `src/router.ts` (inspects command string and delegates to the appropriate adapter).
-- [ ] **Task 4.2**: Implement `src/engine.ts` (orchestrates bypass checks, adapter execution, raw archiving, and metric tracking).
-- [ ] **Task 4.3**: Add unit tests in `tests/engine.test.ts` verifying bypass rules (short output, `cat`, `curl`, disabled state).
+- [x] **Task 4.1**: Implement `src/router.ts` (inspects command string and delegates to the appropriate adapter).
+- [x] **Task 4.2**: Implement `src/engine.ts` (orchestrates bypass checks, adapter execution, raw archiving, and metric tracking).
+- [x] **Task 4.3**: Add unit tests in `tests/engine.test.ts` verifying bypass rules (short output, `cat`, `curl`, disabled state).
 
 ---
 
