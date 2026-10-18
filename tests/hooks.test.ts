@@ -45,7 +45,7 @@ describe('host hooks', () => {
     expect($.ui.status).toHaveBeenCalledWith('⚡ [Paused] (/skim toggle)');
     const input = { result: { stdout: raw, stderr: '', interrupted: false } };
     expect(await call('tool.call', { command: 'npm test' }, vi.fn().mockResolvedValue(input))).toBe(input);
-    expect(await call('command.run', { args: 'stats' })).toMatchObject({ text: expect.stringContaining('Lifetime Savings: 1,000 tokens') });
+    expect(await call('command.run', { args: 'stats' })).toMatchObject({ text: expect.stringContaining('| **Lifetime Saved** | `1,000` tokens') });
   });
   it('preserves continuation even if storage or UI initialization fails', async () => {
     const { $, call } = setup();
@@ -59,7 +59,7 @@ describe('host hooks', () => {
   it('uses fresh session metrics and tolerates malformed stored values', async () => {
     const { call } = setup({ skim_enabled: 'false', skim_lifetime_metrics: { lifetimeTokensSaved: NaN, lifetimeRunsPruned: -4 } });
     await call('session.start');
-    expect(await call('command.run', { args: 'stats' })).toMatchObject({ text: expect.stringContaining('Lifetime Savings: 0 tokens') });
+    expect(await call('command.run', { args: 'stats' })).toMatchObject({ text: expect.stringContaining('| **Lifetime Saved** | `0` tokens') });
   });
   it('prunes a tool result and persists totals without double counting on close', async () => {
     const { $, call, stored } = setup({ skim_lifetime_metrics: { lifetimeTokensSaved: 500, lifetimeRunsPruned: 2 } });

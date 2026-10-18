@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { URL } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
 import { handleSkimCommand, formatStatus } from '../src/commands.js';
 import { createSessionMetrics } from '../src/metrics.js';
@@ -12,31 +14,39 @@ describe('/skim', () => {
   it('reports session, lifetime, adapter and zero-safe reduction statistics', async () => {
     const state = createSessionMetrics();
     const $ = host();
-    expect(await handleSkimCommand($, '', state, { tokensSaved: 100, runsPruned: 1 })).toContain('Average Reduction: 0.0%');
+    expect(await handleSkimCommand($, '', state, { tokensSaved: 100, runsPruned: 1 })).toContain('(0.0% reduction)');
     state.tokensBeforePruning = 1000;
     state.tokensAfterPruning = 250;
     state.tokensSaved = 750;
     state.runsPruned = 2;
     state.adapterBreakdown['Jest / Vitest'] = { runs: 2, tokensSaved: 750 };
     const report = await handleSkimCommand($, 'stats', state, { tokensSaved: 100, runsPruned: 1 });
-    expect(report).toContain('Average Reduction: 75.0%');
-    expect(report).toContain('Jest / Vitest: 2 runs (-750 tokens)');
-    expect(report).toContain('Lifetime Savings: 850 tokens');
+    expect(report).toContain('(75.0% reduction)');
+    expect(report).toContain('- **Jest / Vitest:** 2 runs `(-750 tokens)');
+    expect(report).toContain('| **Lifetime Saved** | `850` tokens (~$0.00) |');
     expect(report).toContain('.claude/skim/runs/');
   });
-  it('renders an aligned savings card with the requested labels', async () => {
+  it('renders the recommended Markdown report from the updated specification', async () => {
     const state = createSessionMetrics();
     state.tokensSaved = 54_210;
     state.runsPruned = 14;
     state.tokensBeforePruning = 69_145;
+    state.adapterBreakdown = {
+      'Jest / Vitest': { runs: 8, tokensSaved: 38_400 },
+      'npm / pnpm': { runs: 3, tokensSaved: 11_200 },
+      'TypeScript (tsc)': { runs: 2, tokensSaved: 3_800 },
+      Fallback: { runs: 1, tokensSaved: 810 },
+    };
     const report = await handleSkimCommand(host(), 'stats', state, { tokensSaved: 1_365_790, runsPruned: 100 });
-    expect(report).toContain('Session Tokens Saved: 54,210 tokens (~$0.16)');
-    expect(report).toContain('Session Logs Skimmed: 14 command runs');
-    expect(report).toContain('Lifetime Savings: 1.42M tokens (~$4.26 saved)');
-    expect(report.startsWith('╭')).toBe(true);
-    expect(report.trimEnd().endsWith('╯')).toBe(true);
-    const widths = report.split('\n').map((line) => [...line].reduce((width, ch) => width + (ch === '⚡' ? 2 : 1), 0));
-    expect(new Set(widths).size).toBe(1);
+    const expected = readFileSync(new URL('../fixtures/skim-report.md', import.meta.url), 'utf8').trimEnd();
+    expect(report).toBe(expected);
+  });
+  it('omits an empty tool breakdown before any output has been skimmed', async () => {
+    const report = await handleSkimCommand(host(), 'stats', createSessionMetrics(), { tokensSaved: 0, runsPruned: 0 });
+    expect(report).toContain('| **Session Saved** | `0` tokens (~$0.00) |');
+    expect(report).toContain('| **Logs Skimmed** | `0` command runs (0.0% reduction) |');
+    expect(report).not.toContain('Breakdown');
+    expect(report).not.toMatch(/[╭╮╰╯│─]/);
   });
   it('persists toggle state before updating the UI', async () => {
     const $ = host();
@@ -66,8 +76,10 @@ describe('/skim', () => {
     expect(text).toContain('line 29');
     expect($.fs.read).toHaveBeenCalledWith(state.lastRawLog);
   });
-  it('provides help for unsupported subcommands', async () => {
-    const text = await handleSkimCommand(host(), 'unknown', createSessionMetrics(), { tokensSaved: 0, runsPruned: 0 });
+  it.each(['help', 'unknown'])('provides Markdown help for %s', async (args) => {
+    const text = await handleSkimCommand(host(), args, createSessionMetrics(), { tokensSaved: 0, runsPruned: 0 });
+    expect(text).toContain('**Skim Commands:**\n\n');
+    expect(text).toContain('- `/skim` or `/skim stats`');
     for (const command of ['stats', 'raw', 'toggle', 'help']) expect(text).toContain(`/skim ${command}`);
   });
   it('formats active, paused and savings status badges', () => {
