@@ -6,16 +6,16 @@ Rendered continuously above the Claude Code prompt input box. Updated on every `
 
 ### Status Bar Format:
 ```text
-⚡ Skim: -48.2k tokens (~$0.14) · 12 logs skimmed
+skim: ⚡ -48.2k tokens (~$0.14) · 12 logs skimmed
 ```
 
 - When 0 tokens saved in the current session:
   ```text
-  ⚡ Skim: Active (monitoring stdout)
+  skim: ⚡ Active (monitoring stdout)
   ```
 - When toggled off:
   ```text
-  ⚡ Skim: [Paused] (/skim toggle)
+  skim: ⚡ [Paused] (/skim toggle)
   ```
 
 ---

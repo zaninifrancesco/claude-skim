@@ -83,10 +83,12 @@ you remove them; automatic retention cleanup is not implemented.
 - `/skim toggle`: persistently pause or resume pruning.
 - `/skim help`: command reference.
 
+Claude Code adds the `skim:` prefix and controls the notification icon/style.
+The plugin keeps the lightning symbol and supplies the status text once.
 The status badge updates after pruning and on turn completion:
 
 ```text
-⚡ Skim: -54.2k tokens (~$0.16) · 14 logs skimmed
+skim: ⚡ -54.2k tokens (~$0.16) · 14 logs skimmed
 ```
 
 `/skim stats` displays a boxed report with session savings, skimmed runs,

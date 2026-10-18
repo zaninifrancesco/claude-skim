@@ -21,11 +21,12 @@ function savingsCard(rows: string[]): string {
   ].join('\n');
 }
 
+// Claude Code adds the plugin name to native status notifications.
 export function formatStatus(state: SessionMetrics): string {
-  if (!state.enabled) return '⚡ Skim: [Paused] (/skim toggle)';
-  if (!state.tokensSaved) return '⚡ Skim: Active (monitoring stdout)';
+  if (!state.enabled) return '⚡ [Paused] (/skim toggle)';
+  if (!state.tokensSaved) return '⚡ Active (monitoring stdout)';
   const tokens = state.tokensSaved >= 1000 ? `${(state.tokensSaved / 1000).toFixed(1)}k` : String(state.tokensSaved);
-  return `⚡ Skim: -${tokens} tokens (~$${estimateDollarSavings(state.tokensSaved).toFixed(2)}) · ${state.runsPruned} logs skimmed`;
+  return `⚡ -${tokens} tokens (~$${estimateDollarSavings(state.tokensSaved).toFixed(2)}) · ${state.runsPruned} logs skimmed`;
 }
 
 export async function handleSkimCommand($: CommandHost, args: string, state: SessionMetrics, lifetime: LifetimeTotals): Promise<string> {

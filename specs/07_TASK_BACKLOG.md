@@ -89,3 +89,7 @@
   `skim@claude-skim` as enabled at user scope. A native host smoke test checked
   automatic Cargo pruning, raw archival, the boxed report, full `/skim raw`
   output and pause behavior. Timing claims are targets rather than guarantees.
+
+
+## Phase 8: Native Status Label
+- [x] **Task 8.1**: Remove the duplicate plugin name from status text, retain the lightning symbol and leave native notification styling unchanged.
