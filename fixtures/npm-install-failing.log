@@ -1,0 +1,14 @@
+npm warn deprecated inflight@1.0.6: This module is not supported.
+[##################] / reify:react: timing reifyNode Completed in 40ms
+npm error code ERESOLVE
+npm error ERESOLVE unable to resolve dependency tree
+npm error
+npm error While resolving: demo@1.0.0
+npm error Found: react@19.0.0
+npm error node_modules/react
+npm error   react@"^19.0.0" from the root project
+npm error
+npm error Could not resolve dependency:
+npm error peer react@"^18.0.0" from old-widget@1.0.0
+npm error Fix the upstream dependency conflict, or retry with --legacy-peer-deps.
+  at resolveDependency (src/install.ts:42:12)
