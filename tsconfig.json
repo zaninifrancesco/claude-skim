@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "types": ["node", "vitest/globals"],
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "outDir": "dist"
+  },
+  "include": [
+    "types",
+    "src",
+    "hooks",
+    "tests"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

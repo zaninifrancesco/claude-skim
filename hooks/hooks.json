@@ -1,0 +1,6 @@
+{
+  "description": "claude-skim: intercepts Bash tool calls and compresses noisy tool output locally before it enters model context.",
+  "modules": [
+    "./register.ts"
+  ]
+}

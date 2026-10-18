@@ -1,0 +1,10 @@
+{
+  "name": "skim",
+  "version": "0.1.0",
+  "description": "Skim the noise, keep the signal. Zero-latency, 100% local stdout compression for Claude Code.",
+  "author": {
+    "name": "Francesco Zanini"
+  },
+  "repository": "https://github.com/francescozanini/claude-skim",
+  "license": "MIT"
+}

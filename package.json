@@ -1,0 +1,33 @@
+{
+  "name": "claude-skim",
+  "version": "0.1.0",
+  "description": "Skim the noise, keep the signal. Zero-latency, 100% local stdout compression for Claude Code.",
+  "keywords": [
+    "claude-code",
+    "claude-code-mod",
+    "skim",
+    "token-optimizer",
+    "context-window",
+    "stdout-compressor",
+    "function-hooks",
+    "developer-tools"
+  ],
+  "author": "Francesco Zanini",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/hooks/register.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "validate": "claude plugin validate ."
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  },
+  "dependencies": {}
+}
