@@ -41,6 +41,11 @@ describe('package managers', () => {
     const stderr = 'ERROR: Failed building wheel for example\nTraceback (most recent call last):\n  File "setup.py", line 12\nCollecting diagnostic from script\nRuntimeError: failed\n';
     expect(adapter.prune('Collecting example\n', stderr).condensedStderr).toBe(stderr);
   });
+  it('preserves legacy npm ERR! blocks including progress-shaped diagnostic text', () => {
+    const details = 'npm ERR! code ECONNRESET\nCollecting diagnostic context\n  at src/install.ts:42:12\n';
+    const raw = 'npm warn deprecated old-package\n' + details;
+    expect(adapter.prune(raw).condensedStdout).toBe(details);
+  });
   it('leaves unknown formats and blank output unchanged', () => {
     expect(adapter.prune('custom installer says hello\n').condensedStdout).toBe('custom installer says hello\n');
     expect(adapter.prune('').condensedStdout).toBe('');
