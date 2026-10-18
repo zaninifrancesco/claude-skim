@@ -24,3 +24,8 @@ export function createSessionMetrics(): SessionMetrics {
     lastPrunedTimestamp: 0,
   };
 }
+
+export interface LifetimeTotals {
+  tokensSaved: number;
+  runsPruned: number;
+}
