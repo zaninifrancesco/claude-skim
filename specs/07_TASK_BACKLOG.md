@@ -80,6 +80,9 @@
 - Task 6.3 is a local draft in `docs/awesome-claude-code-mods-submission.md`;
   no upstream PR or release has been published.
 - The Go adapter and automatic archive cleanup are outside this checklist.
+- Java fixture tests cover Maven/Gradle success, JUnit failures, compiler errors,
+  skipped tests and separate output streams. A native host smoke test verified
+  Java filtering, exact raw archives, `/skim raw`, savings reports and status.
 
 
 ## Phase 7: Zero-Configuration User Experience
