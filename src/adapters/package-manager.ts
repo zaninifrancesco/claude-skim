@@ -7,7 +7,7 @@ function condense(text: string): string {
   let removedNoise = false;
   const kept = lines.filter((raw) => {
     const line = plainLine(raw);
-    if (/^(?:npm (?:ERR!|error)\b|ERROR[: ]|error[: ]|Traceback\b)|\b(?:ERESOLVE|Exception|\w*Error:)\b/.test(line)) inError = true;
+    if (/^(?:npm (?:ERR!(?=\s|$)|error\b)|ERROR[: ]|error[: ]|Traceback\b)|\b(?:ERESOLVE|Exception|\w*Error:)\b/.test(line)) inError = true;
     if (inError) return true;
     if (!line.trim()) return false;
     const noise = /^(?:npm (?:notice|warn deprecated)\b|\[[#= >\\/|\-]+\].*(?:reify|fetch)|reify:)/.test(line)
