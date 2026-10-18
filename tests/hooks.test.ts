@@ -42,7 +42,7 @@ describe('host hooks', () => {
   it('restores a paused user preference and saved lifetime metrics', async () => {
     const { $, call } = setup({ skim_enabled: false, skim_lifetime_metrics: { lifetimeTokensSaved: 1000, lifetimeRunsPruned: 2 } });
     await call('session.start');
-    expect($.ui.status).toHaveBeenCalledWith('⚡ Skim: [Paused] (/skim toggle)');
+    expect($.ui.status).toHaveBeenCalledWith('⚡ [Paused] (/skim toggle)');
     const input = { result: { stdout: raw, stderr: '', interrupted: false } };
     expect(await call('tool.call', { command: 'npm test' }, vi.fn().mockResolvedValue(input))).toBe(input);
     expect(await call('command.run', { args: 'stats' })).toMatchObject({ text: expect.stringContaining('Lifetime Savings: 1,000 tokens') });

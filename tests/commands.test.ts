@@ -44,7 +44,7 @@ describe('/skim', () => {
     expect(await handleSkimCommand($, 'toggle', state, { tokensSaved: 0, runsPruned: 0 })).toContain('Paused');
     expect(state.enabled).toBe(false);
     expect($.store.set).toHaveBeenCalledWith('skim_enabled', false);
-    expect($.ui.status).toHaveBeenLastCalledWith('⚡ Skim: [Paused] (/skim toggle)');
+    expect($.ui.status).toHaveBeenLastCalledWith('⚡ [Paused] (/skim toggle)');
     await handleSkimCommand($, 'toggle', state, { tokensSaved: 0, runsPruned: 0 });
     expect(state.enabled).toBe(true);
   });
@@ -72,9 +72,9 @@ describe('/skim', () => {
   });
   it('formats active, paused and savings status badges', () => {
     const state = createSessionMetrics();
-    expect(formatStatus(state)).toBe('⚡ Skim: Active (monitoring stdout)');
+    expect(formatStatus(state)).toBe('⚡ Active (monitoring stdout)');
     state.tokensSaved = 48200;
     state.runsPruned = 12;
-    expect(formatStatus(state)).toBe('⚡ Skim: -48.2k tokens (~$0.14) · 12 logs skimmed');
+    expect(formatStatus(state)).toBe('⚡ -48.2k tokens (~$0.14) · 12 logs skimmed');
   });
 });
