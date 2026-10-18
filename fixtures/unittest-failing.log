@@ -1,0 +1,15 @@
+test_add (tests.test_math.MathTests.test_add) ... ok
+test_status (tests.test_auth.AuthTests.test_status) ... FAIL
+
+======================================================================
+FAIL: test_status (tests.test_auth.AuthTests.test_status)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/dev/project/tests/test_auth.py", line 36, in test_status
+    self.assertEqual(response.status, 401)
+AssertionError: 200 != 401
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.002s
+
+FAILED (failures=1)

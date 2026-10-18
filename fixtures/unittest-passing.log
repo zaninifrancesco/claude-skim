@@ -1,0 +1,8 @@
+test_add (tests.test_math.MathTests.test_add) ... ok
+test_subtract (tests.test_math.MathTests.test_subtract) ... ok
+test_multiply (tests.test_math.MathTests.test_multiply) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+OK
