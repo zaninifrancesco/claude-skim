@@ -27,14 +27,14 @@
 ---
 
 ## Phase 3: Package Managers, Compilers & Fallback
-- [ ] **Task 3.1**: Implement `src/adapters/package-manager.ts` (npm, pnpm, yarn, pip).
+- [x] **Task 3.1**: Implement `src/adapters/package-manager.ts` (npm, pnpm, yarn, pip).
   - Strip progress bars, download spinners, audit banners; keep added package summary & fatal errors.
-- [ ] **Task 3.2**: Add unit tests in `tests/adapters/package-manager.test.ts` using `fixtures/npm-install.log`.
-- [ ] **Task 3.3**: Implement `src/adapters/compiler.ts` (`tsc`, `eslint`).
+- [x] **Task 3.2**: Add unit tests in `tests/adapters/package-manager.test.ts` using `fixtures/npm-install.log`.
+- [x] **Task 3.3**: Implement `src/adapters/compiler.ts` (`tsc`, `eslint`).
   - Keep file:line:col errors, strip boilerplate headers and passing file rows.
-- [ ] **Task 3.4**: Add unit tests in `tests/adapters/compiler.test.ts` using `fixtures/tsc-errors.log`.
-- [ ] **Task 3.5**: Implement `src/adapters/fallback.ts` (Head & Tail smart truncation for arbitrary $> 35$ line output).
-- [ ] **Task 3.6**: Add unit tests in `tests/adapters/fallback.test.ts`.
+- [x] **Task 3.4**: Add unit tests in `tests/adapters/compiler.test.ts` using `fixtures/tsc-errors.log`.
+- [x] **Task 3.5**: Implement `src/adapters/fallback.ts` (Head & Tail smart truncation for arbitrary $> 35$ line output).
+- [x] **Task 3.6**: Add unit tests in `tests/adapters/fallback.test.ts`.
 
 ---
 
