@@ -91,8 +91,10 @@ The status badge updates after pruning and on turn completion:
 skim: ⚡ -54.2k tokens (~$0.16) · 14 logs skimmed
 ```
 
-`/skim stats` displays a boxed report with session savings, skimmed runs,
-average reduction, adapter breakdown and lifetime savings. The figures above
+`/skim stats` displays a Markdown table with session savings, skimmed runs,
+average reduction and lifetime savings, followed by a tool breakdown.
+`/skim help` uses a Markdown command list. Neither output relies on raw
+Unicode borders or fixed-width padding. The figures above
 are illustrative estimates, not measured billing credits.
 
 The status badge updates after pruning and on turn completion. Token estimates

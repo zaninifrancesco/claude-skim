@@ -10,17 +10,6 @@ type CommandHost = {
 const number = (value: number) => value.toLocaleString('en-US');
 const lifetimeNumber = (value: number) => value >= 1_000_000 ? `${(value / 1_000_000).toFixed(2)}M` : number(value);
 
-function savingsCard(rows: string[]): string {
-  const columns = (line: string) => line.length + (line.includes('⚡') ? 1 : 0);
-  const width = Math.max(58, ...rows.map(columns));
-  const row = (line: string) => `│ ${line}${' '.repeat(width - columns(line))} │`;
-  return [
-    `╭${'─'.repeat(width + 2)}╮`, row('⚡ Skim Savings Report'),
-    `├${'─'.repeat(width + 2)}┤`, ...rows.map(row),
-    `╰${'─'.repeat(width + 2)}╯`,
-  ].join('\n');
-}
-
 // Claude Code adds the plugin name to native status notifications.
 export function formatStatus(state: SessionMetrics): string {
   if (!state.enabled) return '⚡ [Paused] (/skim toggle)';
@@ -35,18 +24,21 @@ export async function handleSkimCommand($: CommandHost, args: string, state: Ses
     case 'stats': {
       const reduction = state.tokensBeforePruning ? state.tokensSaved / state.tokensBeforePruning * 100 : 0;
       const total = lifetime.tokensSaved + state.tokensSaved;
-      return savingsCard([
-        `Session Tokens Saved: ${number(state.tokensSaved)} tokens (~$${estimateDollarSavings(state.tokensSaved).toFixed(2)})`,
-        `Session Logs Skimmed: ${state.runsPruned} command runs`,
-        `Average Reduction: ${reduction.toFixed(1)}%`,
+      const breakdown = Object.entries(state.adapterBreakdown).map(([name, stats]) => {
+        const tokens = stats.tokensSaved >= 1000 ? `${(stats.tokensSaved / 1000).toFixed(1)}k` : number(stats.tokensSaved);
+        return `- **${name}:** ${stats.runs} ${stats.runs === 1 ? 'run' : 'runs'} \`(-${tokens} tokens)\``;
+      });
+      return [
+        '### ⚡ Skim Savings Report',
         '',
-        'Breakdown by Adapter:',
-        ...Object.entries(state.adapterBreakdown).map(([name, stats]) => `  • ${name}: ${stats.runs} runs (-${number(stats.tokensSaved)} tokens)`),
-        '',
-        `Lifetime Savings: ${lifetimeNumber(total)} tokens (~$${estimateDollarSavings(total).toFixed(2)} saved)`,
-        `Lifetime Logs Skimmed: ${number(lifetime.runsPruned + state.runsPruned)} command runs`,
-        'Archive Directory: .claude/skim/runs/',
-      ]);
+        '| Metric | Details |',
+        '| :--- | :--- |',
+        `| **Session Saved** | \`${number(state.tokensSaved)}\` tokens (~$${estimateDollarSavings(state.tokensSaved).toFixed(2)}) |`,
+        `| **Logs Skimmed** | \`${number(state.runsPruned)}\` command runs (${reduction.toFixed(1)}% reduction) |`,
+        `| **Lifetime Saved** | \`${lifetimeNumber(total)}\` tokens (~$${estimateDollarSavings(total).toFixed(2)}) |`,
+        '| **Archive Directory** | `.claude/skim/runs/` |',
+        ...(breakdown.length ? ['', '**Breakdown by Tool:**', ...breakdown] : []),
+      ].join('\n');
     }
     case 'raw':
       if (!state.lastRawLog) return 'Skim: No output has been pruned in this session.';
@@ -61,6 +53,13 @@ export async function handleSkimCommand($: CommandHost, args: string, state: Ses
       return message;
     }
     default:
-      return '/skim stats — session and lifetime savings\n/skim raw — latest raw log in full\n/skim toggle — pause or resume pruning\n/skim help — show this help';
+      return [
+        '**Skim Commands:**',
+        '',
+        '- `/skim` or `/skim stats` — View session & lifetime savings report',
+        '- `/skim raw` — Inspect latest uncompressed log in full',
+        '- `/skim toggle` — Pause or resume stdout pruning',
+        '- `/skim help` — Show this help message',
+      ].join('\n');
   }
 }

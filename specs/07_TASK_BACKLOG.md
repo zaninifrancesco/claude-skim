@@ -93,3 +93,7 @@
 
 ## Phase 8: Native Status Label
 - [x] **Task 8.1**: Remove the duplicate plugin name from status text, retain the lightning symbol and leave native notification styling unchanged.
+
+
+## Phase 9: Cross-Client Markdown Reports
+- [x] **Task 9.1**: Implement the recommended Markdown table report and Markdown help from the updated TUI specification; preserve the native status badge and raw/toggle behavior.
