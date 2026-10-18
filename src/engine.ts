@@ -26,6 +26,7 @@ export async function processToolCall(
     if (record.interrupted || record.isImage || record.backgroundTaskId || record.persistedOutputPath || record.rawOutputPath || record.structuredContent?.length) return answer;
     const { stdout, stderr } = record;
     const raw = stdout + stderr;
+    if (/permission denied|operation not permitted|command not found/i.test(raw)) return answer;
     if (raw.length < 1500 || lineCount(raw) < MIN_LINES_THRESHOLD) return answer;
     if (/[\x00-\x08\x0b\x0c\x0e-\x1a\x1c-\x1f]/.test(raw) || /^[A-Za-z\d+/\s]+={0,2}\s*$/.test(raw) && raw.replace(/\s/g, '').length > 200) return answer;
     const adapter = routeCommand(command, stdout, stderr);
