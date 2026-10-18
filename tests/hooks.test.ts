@@ -81,6 +81,14 @@ describe('host hooks', () => {
     const output = await call('tool.call', { command: 'npm test' }, vi.fn().mockResolvedValue({ result: { stdout: raw, stderr: '', interrupted: false } }));
     expect(output).toMatchObject({ result: { stdout: expect.stringContaining('Full raw log:') } });
   });
+  it('does not overwrite lifetime metrics when startup storage cannot be read', async () => {
+    const { $, call } = setup();
+    $.store.get.mockRejectedValue(new Error('unavailable'));
+    await call('session.start');
+    await call('turn.complete');
+    await call('classic.SessionEnd');
+    expect($.store.set).not.toHaveBeenCalled();
+  });
   it('does not rerun a failed Bash continuation', async () => {
     const { call } = setup();
     const next = vi.fn().mockRejectedValue(new Error('tool failed'));

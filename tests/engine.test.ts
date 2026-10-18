@@ -89,6 +89,12 @@ describe('pruning engine', () => {
     }
   });
 
+  it('passes hard system errors through even when a runner summary is present', async () => {
+    const input = answer(raw, 'Permission denied: cannot open test cache\n');
+    const $ = host();
+    expect(await processToolCall($, 'npm test', input, createSessionMetrics())).toBe(input);
+    expect($.fs.write).not.toHaveBeenCalled();
+  });
   it('does not change malformed runtime results', async () => {
     const input = { result: { stdout: 42 } } as unknown as ToolCallResult<'Bash'>;
     const $ = host();
